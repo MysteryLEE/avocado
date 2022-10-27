@@ -9,10 +9,10 @@ class FailOnException(avocado.Test):
     :avocado: tags=failure_expected
     """
 
-    @staticmethod
+    # @staticmethod
     # @avocado.fail_on(ValueError) also possible
     @avocado.fail_on
-    def test():
+    def test(self):
         """
         This should end with FAIL.
 
@@ -21,4 +21,4 @@ class FailOnException(avocado.Test):
         to override this behavior, and turn your generic exceptions into
         errors.
         """
-        raise ValueError("This raises a ValueError and should end as a FAIL")
+        self.assertRaises(ValueError, msg="This raises a ValueError and should end as a FAIL")

@@ -4,6 +4,10 @@ import unittest.mock
 from avocado import Test
 from avocado.utils import linux_modules
 
+class ExtractedLsmod(Test):
+    def test_parse_lsmod_is_empty(self):
+        lsmod_info = linux_modules.parse_lsmod_for_module("", "ebtables")
+        self.assertEqual(lsmod_info, {})
 
 class Lsmod(Test):
     def setUp(self):
@@ -22,9 +26,9 @@ class Lsmod(Test):
             },
         )
 
-    def test_parse_lsmod_is_empty(self):
-        lsmod_info = linux_modules.parse_lsmod_for_module("", "ebtables")
-        self.assertEqual(lsmod_info, {})
+    # def test_parse_lsmod_is_empty(self):
+    #     lsmod_info = linux_modules.parse_lsmod_for_module("", "ebtables")
+    #     self.assertEqual(lsmod_info, {})
 
     def test_parse_lsmod_no_submodules(self):
         lsmod_info = linux_modules.parse_lsmod_for_module(self.lsmod_out, "ccm")

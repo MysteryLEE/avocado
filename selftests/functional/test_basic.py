@@ -1081,6 +1081,26 @@ class PluginsTest(TestCaseTmpDir):
             )
             self.assertNotIn(b"Collect system information", result.stdout)
 
+    def run_config(config_path):
+        cmd = (
+            f"{AVOCADO} --config {config_path} "
+            f"run examples/tests/passtest.py --archive "
+            f"--job-results-dir {self.tmpdir.name} "
+            f"--disable-sysinfo"
+        )
+        result = process.run(cmd, ignore_status=True)
+        expected_rc = exit_codes.AVOCADO_ALL_OK
+        self.assertEqual(
+            result.exit_status,
+            expected_rc,
+            (f"Avocado did not return rc {expected_rc}:" f"\n{result}"),
+        )
+
+        def test_plugin_order_init(self):
+            self.result_plugins = ["json", "xunit", "zip_archive"]
+            self.result_outputs = ["results.json", "results.xml"]
+
+
     def test_plugin_order(self):
         """
         Tests plugin order by configuration file
@@ -1093,26 +1113,27 @@ class PluginsTest(TestCaseTmpDir):
         json and xunit output files *do* make into the archive.
         """
 
-        def run_config(config_path):
-            cmd = (
-                f"{AVOCADO} --config {config_path} "
-                f"run examples/tests/passtest.py --archive "
-                f"--job-results-dir {self.tmpdir.name} "
-                f"--disable-sysinfo"
-            )
-            result = process.run(cmd, ignore_status=True)
-            expected_rc = exit_codes.AVOCADO_ALL_OK
-            self.assertEqual(
-                result.exit_status,
-                expected_rc,
-                (f"Avocado did not return rc {expected_rc}:" f"\n{result}"),
-            )
+        # def run_config(config_path):
+        #     cmd = (
+        #         f"{AVOCADO} --config {config_path} "
+        #         f"run examples/tests/passtest.py --archive "
+        #         f"--job-results-dir {self.tmpdir.name} "
+        #         f"--disable-sysinfo"
+        #     )
+        #     result = process.run(cmd, ignore_status=True)
+        #     expected_rc = exit_codes.AVOCADO_ALL_OK
+        #     self.assertEqual(
+        #         result.exit_status,
+        #         expected_rc,
+        #         (f"Avocado did not return rc {expected_rc}:" f"\n{result}"),
+        #     )
 
-        result_plugins = ["json", "xunit", "zip_archive"]
-        result_outputs = ["results.json", "results.xml"]
+        # self.result_plugins = ["json", "xunit", "zip_archive"]
+        # self.result_outputs = ["results.json", "results.xml"]
+        self.test_plugin_order_init()
         if python_module_available("avocado-framework-plugin-result-html"):
-            result_plugins.append("html")
-            result_outputs.append("results.html")
+            self.result_plugins.append("html")
+            self.result_outputs.append("results.html")
 
         cmd_line = f"{AVOCADO} plugins"
         result = process.run(cmd_line, ignore_status=True)
@@ -1122,7 +1143,7 @@ class PluginsTest(TestCaseTmpDir):
             expected_rc,
             f"Avocado did not return rc {expected_rc}:\n{result}",
         )
-        for result_plugin in result_plugins:
+        for result_plugin in self.result_plugins:
             self.assertIn(result_plugin, result.stdout_text)
 
         config_content_zip_first = "[plugins.result]\norder=['zip_archive']"
@@ -1130,12 +1151,12 @@ class PluginsTest(TestCaseTmpDir):
             "zip_first.conf", config_content_zip_first
         )
         with config_zip_first:
-            run_config(config_zip_first)
+            self.run_config(config_zip_first)
             archives = glob.glob(os.path.join(self.tmpdir.name, "*.zip"))
             self.assertEqual(len(archives), 1, "ZIP Archive not generated")
             zip_file = zipfile.ZipFile(archives[0], "r")
             zip_file_list = zip_file.namelist()
-            for result_output in result_outputs:
+            for result_output in self.result_outputs:
                 self.assertNotIn(result_output, zip_file_list)
             os.unlink(archives[0])
 
@@ -1148,7 +1169,7 @@ class PluginsTest(TestCaseTmpDir):
             "zip_last.conf", config_content_zip_last
         )
         with config_zip_last:
-            run_config(config_zip_last)
+            self.run_config(config_zip_last)
             archives = glob.glob(os.path.join(self.tmpdir.name, "*.zip"))
             self.assertEqual(len(archives), 1, "ZIP Archive not generated")
             zip_file = zipfile.ZipFile(archives[0], "r")

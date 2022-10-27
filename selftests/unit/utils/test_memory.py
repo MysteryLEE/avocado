@@ -27,7 +27,8 @@ class GetBuddyInfo(unittest.TestCase):
     def test_simple_chunk_size(self, buddy_mocked):
         chunk_size = "0"
         result = memory.get_buddy_info(chunk_size)
-        self.assertEqual(result[chunk_size], 6418)
+        memory_chunk_size = 6418
+        self.assertEqual(result[chunk_size], memory_chunk_size)
         self.assertTrue(buddy_mocked.called)
 
     def test_less_than_chunk_size(self, buddy_mocked):

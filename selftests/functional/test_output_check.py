@@ -286,18 +286,27 @@ class RunnerSimpleTest(TestCaseTmpDir):
         )
         self.assertIn(tampered_msg, result.stdout)
 
+    def test_output_diff_init(self):
+        self.tampered_msg_stdout = b"I PITY THE FOOL THAT STANDS ON STDOUT!"
+        self.tampered_msg_stderr = b"I PITY THE FOOL THAT STANDS ON STDERR!"
+
+        self.stdout_file = f"{self.output_script.path}.data/stdout.expected"
+
+        self.stderr_file = f"{self.output_script.path}.data/stderr.expected"
+
     def test_output_diff(self):
         self._check_output_record_all()
-        tampered_msg_stdout = b"I PITY THE FOOL THAT STANDS ON STDOUT!"
-        tampered_msg_stderr = b"I PITY THE FOOL THAT STANDS ON STDERR!"
+        self.test_output_diff_init()
+        # self.tampered_msg_stdout = b"I PITY THE FOOL THAT STANDS ON STDOUT!"
+        # self.tampered_msg_stderr = b"I PITY THE FOOL THAT STANDS ON STDERR!"
 
-        stdout_file = f"{self.output_script.path}.data/stdout.expected"
-        with open(stdout_file, "wb") as stdout_file_obj:  # pylint: disable=W1514
-            stdout_file_obj.write(tampered_msg_stdout)
+        # self.stdout_file = f"{self.output_script.path}.data/stdout.expected"
+        with open(self.stdout_file, "wb") as stdout_file_obj:  # pylint: disable=W1514
+            stdout_file_obj.write(self.tampered_msg_stdout)
 
-        stderr_file = f"{self.output_script.path}.data/stderr.expected"
-        with open(stderr_file, "wb") as stderr_file_obj:  # pylint: disable=W1514
-            stderr_file_obj.write(tampered_msg_stderr)
+        # self.stderr_file = f"{self.output_script.path}.data/stderr.expected"
+        with open(self.stderr_file, "wb") as stderr_file_obj:  # pylint: disable=W1514
+            stderr_file_obj.write(self.tampered_msg_stderr)
 
         cmd_line = (
             f"{AVOCADO} run --job-results-dir {self.tmpdir.name} "

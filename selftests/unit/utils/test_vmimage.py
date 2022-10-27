@@ -69,7 +69,8 @@ class ImageProviderBase(unittest.TestCase):
         urlread_mocked = unittest.mock.Mock(return_value=html_fixture)
         urlopen_mock.return_value = unittest.mock.Mock(read=urlread_mocked)
         base_image = vmimage.ImageProviderBase(version="[0-9]+", build=None, arch=None)
-        self.assertEqual(base_image.get_version(), 12)
+        tested_version_number = 12
+        self.assertEqual(base_image.get_version(), tested_version_number)
 
     @unittest.mock.patch("avocado.utils.vmimage.urlopen")
     def test_get_version_with_float_versions(self, urlopen_mock):
@@ -412,9 +413,9 @@ class OpenSUSEImageProvider(unittest.TestCase):
 </body></html>
 """
 
-    def setUp(self):
-        self.suse_available_versions = ["15.0", "15.1", "15.2", "15.3", "42.3"]
-        self.base_images_url = "https://download.opensuse.org/pub/opensuse/distribution/leap/15.3/appliances/"
+    # def setUp(self):
+    #     self.suse_available_versions = ["15.0", "15.1", "15.2", "15.3", "42.3"]
+    #     self.base_images_url = "https://download.opensuse.org/pub/opensuse/distribution/leap/15.3/appliances/"
 
     @staticmethod
     def get_html_with_image_link(image_link):
@@ -428,7 +429,11 @@ class OpenSUSEImageProvider(unittest.TestCase):
             % image_link
         )
 
+    def test_get_best_version_default_init(self):
+        self.suse_available_versions = ["15.0", "15.1", "15.2", "15.3", "42.3"]
+
     def test_get_best_version_default(self):
+        self.test_get_best_version_default_init()
         suse_latest_version = 15.3
         suse_provider = vmimage.OpenSUSEImageProvider(arch="x86_64")
         self.assertEqual(
@@ -437,6 +442,7 @@ class OpenSUSEImageProvider(unittest.TestCase):
         )
 
     def test_get_best_version_leap_4_series(self):
+        self.test_get_best_version_default_init()
         suse_latest_version = 42.3
         suse_provider = vmimage.OpenSUSEImageProvider(version="4(.)*", arch="x86_64")
         self.assertEqual(
@@ -444,8 +450,12 @@ class OpenSUSEImageProvider(unittest.TestCase):
             suse_latest_version,
         )
 
+    def test_get_image_url_init(self):
+        self.base_images_url = "https://download.opensuse.org/pub/opensuse/distribution/leap/15.3/appliances/"
+
     @unittest.mock.patch("avocado.utils.vmimage.urlopen")
     def test_get_image_url(self, urlopen_mock):
+        self.test_get_image_url_init()
         image = "openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
         html_fixture = self.get_html_with_image_link(image)
         urlread_mocked = unittest.mock.Mock(return_value=html_fixture)
@@ -458,6 +468,7 @@ class OpenSUSEImageProvider(unittest.TestCase):
 
     @unittest.mock.patch("avocado.utils.vmimage.urlopen")
     def test_get_image_url_defining_build(self, urlopen_mock):
+        self.test_get_image_url_init()
         image = "openSUSE-Leap-15.3-JeOS.x86_64-15.3-OpenStack-Cloud-Build1.111.qcow2"
         html_fixture = self.get_html_with_image_link(image)
         urlread_mocked = unittest.mock.Mock(return_value=html_fixture)

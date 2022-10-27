@@ -14,10 +14,11 @@ class PortTrackerTest(unittest.TestCase):
     def test_register_port(self):
         tracker = ports.PortTracker()
         ports.is_port_free = unittest.mock.MagicMock(return_value=True)
-        self.assertNotIn(22, tracker.retained_ports)
-        tracker.register_port(22)
-        ports.is_port_free.assert_called_once_with(22, tracker.address)
-        self.assertIn(22, tracker.retained_ports)
+        port_number = 22
+        self.assertNotIn(port_number, tracker.retained_ports)
+        tracker.register_port(port_number)
+        ports.is_port_free.assert_called_once_with(port_number, tracker.address)
+        self.assertIn(port_number, tracker.retained_ports)
 
     def test_release_port_does_not_poke_system(self):
         tracker = ports.PortTracker()

@@ -109,11 +109,11 @@ class GdbTest(Test):
 
         file_cmd = f"-file-exec-and-symbols {self.return99_binary_path}"
         r = g.cmd(file_cmd)
-        self.assertEqual(r.result.class_, "done")
+        self.assertEqual(r.result.class_, "done", msg="GDB failed to load file")
 
         break_cmd = "-break-insert 5"
         r = g.cmd(break_cmd)
-        self.assertEqual(r.result.class_, "done")
+        self.assertEqual(r.result.class_, "done", msg="GDB failed to set breakpoint")
         self.assertEqual(r.result.result.bkpt.number, "1")
         self.assertEqual(r.result.result.bkpt.enabled, "y")
 

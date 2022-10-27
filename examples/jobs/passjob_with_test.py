@@ -11,9 +11,9 @@ from avocado.core.job import Job
 config = {"resolver.references": [__file__]}
 
 
-class PassTest(Test):
-    def test(self):
-        pass
+# class PassTest(Test):
+#     def test(self):
+#         pass
 
 
 if __name__ == "__main__":

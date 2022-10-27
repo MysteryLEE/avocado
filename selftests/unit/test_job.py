@@ -12,6 +12,23 @@ from selftests.utils import setup_avocado_loggers, temp_dir_prefix
 
 setup_avocado_loggers()
 
+class ExtractedJobTest(unittest.TestCase):
+    def test_suite_not_started(self):
+        suite = TestSuite("empty-suite")
+        self.assertEqual(suite.status, TestSuiteStatus.RESOLUTION_NOT_STARTED)
+
+    def test_suite_tests_found(self):
+        suite = TestSuite.from_config({"resolver.references": ["/bin/true"]})
+        self.assertEqual(suite.status, TestSuiteStatus.TESTS_FOUND)
+
+    def test_suite_tests_not_found(self):
+        suite = TestSuite.from_config(
+            {
+                "resolver.references": ["/bin/not-found"],
+                "run.ignore_missing_references": True,
+            }
+        )
+        self.assertEqual(suite.status, TestSuiteStatus.TESTS_NOT_FOUND)
 
 class JobTest(unittest.TestCase):
     def setUp(self):
@@ -91,22 +108,22 @@ class JobTest(unittest.TestCase):
         self.job.setup()
         self.assertIsNone(self.job.test_suite)
 
-    def test_suite_not_started(self):
-        suite = TestSuite("empty-suite")
-        self.assertEqual(suite.status, TestSuiteStatus.RESOLUTION_NOT_STARTED)
-
-    def test_suite_tests_found(self):
-        suite = TestSuite.from_config({"resolver.references": ["/bin/true"]})
-        self.assertEqual(suite.status, TestSuiteStatus.TESTS_FOUND)
-
-    def test_suite_tests_not_found(self):
-        suite = TestSuite.from_config(
-            {
-                "resolver.references": ["/bin/not-found"],
-                "run.ignore_missing_references": True,
-            }
-        )
-        self.assertEqual(suite.status, TestSuiteStatus.TESTS_NOT_FOUND)
+    # def test_suite_not_started(self):
+    #     suite = TestSuite("empty-suite")
+    #     self.assertEqual(suite.status, TestSuiteStatus.RESOLUTION_NOT_STARTED)
+    #
+    # def test_suite_tests_found(self):
+    #     suite = TestSuite.from_config({"resolver.references": ["/bin/true"]})
+    #     self.assertEqual(suite.status, TestSuiteStatus.TESTS_FOUND)
+    #
+    # def test_suite_tests_not_found(self):
+    #     suite = TestSuite.from_config(
+    #         {
+    #             "resolver.references": ["/bin/not-found"],
+    #             "run.ignore_missing_references": True,
+    #         }
+    #     )
+    #     self.assertEqual(suite.status, TestSuiteStatus.TESTS_NOT_FOUND)
 
     def test_job_create_test_suite_empty(self):
         config = {"run.results_dir": self.tmpdir.name, "core.show": ["none"]}

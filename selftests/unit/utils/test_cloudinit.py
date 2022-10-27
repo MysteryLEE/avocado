@@ -64,11 +64,11 @@ class PhoneHome(unittest.TestCase):
         self.server = cloudinit.PhoneHomeServer((self.ADDRESS, 0), self.instance_id)
 
     def test_phone_home_bad(self):
-        self.assertFalse(self.server.instance_phoned_back)
+        self.assertFalse(self.server.instance_phoned_back, msg="Instance phoned back")
         server_thread = threading.Thread(target=self.server.handle_request)
         server_thread.start()
         self.post_ignore_response("/BAD_INSTANCE_ID")
-        self.assertFalse(self.server.instance_phoned_back)
+        self.assertFalse(self.server.instance_phoned_back, msg="Instance phoned back for bad instance ID")
 
     def test_phone_home_good(self):
         self.assertFalse(self.server.instance_phoned_back)

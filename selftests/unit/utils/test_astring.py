@@ -144,12 +144,12 @@ class AstringUtilsTest(unittest.TestCase):
     def test_to_text_is_text(self):
         self.assertTrue(astring.is_text(astring.to_text(b"")))
         self.assertTrue(astring.is_text(astring.to_text("")))
-        self.assertTrue(astring.is_text(astring.to_text("")))
+        # self.assertTrue(astring.is_text(astring.to_text("")))
 
     def test_to_text_decode_is_text(self):
         self.assertTrue(astring.is_text(astring.to_text(b"", "ascii")))
         self.assertTrue(astring.is_text(astring.to_text("", "ascii")))
-        self.assertTrue(astring.is_text(astring.to_text("", "ascii")))
+        # self.assertTrue(astring.is_text(astring.to_text("", "ascii")))
 
     def test_to_text(self):
         text_1 = astring.to_text(b"\xc3\xa1", "utf-8")

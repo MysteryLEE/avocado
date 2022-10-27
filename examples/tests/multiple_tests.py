@@ -15,8 +15,8 @@ class MultipleTests(Test):
     def test_hello(self):
         self.assertEqual(self.hello, "Hi there!")
 
-    def testIdentity(self):
-        self.assertIs(1, 1)
+    # def testIdentity(self):
+    #     self.assertIs(1, 1)
 
     @staticmethod
     def division_by_zero():

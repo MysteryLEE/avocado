@@ -180,20 +180,32 @@ def get_service_manager_from_init_and_run(init_name, run_mock):
 
 
 class TestSystemdServiceManager(unittest.TestCase):
-    def setUp(self):
+    # def setUp(self):
+    #     self.run_mock = unittest.mock.Mock()
+    #     self.init_name = "systemd"
+    #     self.service_manager = get_service_manager_from_init_and_run(
+    #         self.init_name, self.run_mock
+    #     )
+
+    def test_start_init(self):
         self.run_mock = unittest.mock.Mock()
-        self.init_name = "systemd"
+        init_name = "systemd"
         self.service_manager = get_service_manager_from_init_and_run(
-            self.init_name, self.run_mock
+            init_name, self.run_mock
         )
 
     def test_start(self):
+        self.test_start_init()
         srv = "lldpad"
         self.service_manager.start(srv)
         cmd = f"systemctl start {srv}.service"
         self.assertEqual(self.run_mock.call_args[0][0], cmd)  # pylint: disable=E1136
 
+    def test_list_init(self):
+        self.init_name = "systemd"
+
     def test_list(self):
+        self.test_list_init()
         list_result_mock = unittest.mock.Mock(
             exit_status=0,
             stdout_text="sshd.service enabled\n"
@@ -214,7 +226,15 @@ class TestSystemdServiceManager(unittest.TestCase):
             {"sshd": "enabled", "vsftpd": "disabled", "systemd-sysctl": "static"},
         )
 
+    def test_set_default_runlevel_init(self):
+        run_mock = unittest.mock.Mock()
+        init_name = "systemd"
+        self.service_manager = get_service_manager_from_init_and_run(
+            init_name, run_mock
+        )
+
     def test_set_default_runlevel(self):
+        self.test_set_default_runlevel_init()
         runlevel = service.convert_sysv_runlevel(3)
         mktemp_mock = unittest.mock.Mock(return_value="temp_filename")
         symlink_mock = unittest.mock.Mock()

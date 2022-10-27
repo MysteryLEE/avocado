@@ -20,9 +20,9 @@ class FailTest(Test):
     :avocado: tags=failure_expected
     """
 
-    @staticmethod
-    def test():
+    # @staticmethod
+    def test(self):
         """
         Avocado should report this as TestError.
         """
-        raise NastyException("Nasty-string-like-exception\u017e")
+        self.assertRaises(NastyException, msg="Nasty-string-like-exception\u017e")

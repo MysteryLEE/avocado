@@ -130,6 +130,11 @@ class TestAsset(TestCaseTmpDir):
         )
         self.assertRaises(asset.UnsupportedProtocolError, invalid.fetch)
 
+    def test_fetch_different_files_init(self):
+        self.second_asset_content = "This is not your first asset content!"
+
+        self.third_asset_content = "Another content!"
+
     def test_fetch_different_files(self):
         """
         Checks that when different assets which happen to have the
@@ -137,14 +142,14 @@ class TestAsset(TestCaseTmpDir):
         and that the right one will be given to the user, no matter if
         a hash is used or not.
         """
-        second_assetname = self.assetname
-        second_asset_origin_dir = tempfile.mkdtemp(dir=self.tmpdir.name)
+        # second_assetname = self.assetname
+        # second_asset_origin_dir = tempfile.mkdtemp(dir=self.tmpdir.name)
+        self.test_fetch_different_files_init()
         second_asset_local_path = os.path.join(
-            second_asset_origin_dir, second_assetname
+            self.assetdir, self.assetname
         )
-        second_asset_content = "This is not your first asset content!"
         with open(second_asset_local_path, "w", encoding="utf-8") as f:
-            f.write(second_asset_content)
+            f.write(self.second_asset_content)
         second_asset_origin_url = f"file://{second_asset_local_path}"
 
         a1 = asset.Asset(self.url, self.assethash, "sha1", None, [self.cache_dir], None)
@@ -154,21 +159,21 @@ class TestAsset(TestCaseTmpDir):
         )
         a2_path = a2.fetch()
         with open(a2_path, "r", encoding="utf-8") as a2_file:
-            self.assertEqual(a2_file.read(), second_asset_content)
+            self.assertEqual(a2_file.read(), self.second_asset_content)
 
-        third_assetname = self.assetname
-        third_asset_origin_dir = tempfile.mkdtemp(dir=self.tmpdir.name)
-        third_asset_local_path = os.path.join(third_asset_origin_dir, third_assetname)
-        third_asset_content = "Another content!"
+        # third_assetname = self.assetname
+        # third_asset_origin_dir = tempfile.mkdtemp(dir=self.tmpdir.name)
+        third_asset_local_path = os.path.join(self.assetdir, self.assetname)
+        self.third_asset_content = "Another content!"
         with open(third_asset_local_path, "w", encoding="utf-8") as f:
-            f.write(third_asset_content)
+            f.write(self.third_asset_content)
         third_asset_origin_url = f"file://{third_asset_local_path}"
         a3 = asset.Asset(
             third_asset_origin_url, None, None, None, [self.cache_dir], None
         )
         a3_path = a3.fetch()
         with open(a3_path, "r", encoding="utf-8") as a3_file:
-            self.assertEqual(a3_file.read(), third_asset_content)
+            self.assertEqual(a3_file.read(), self.third_asset_content)
 
     def test_create_metadata_file(self):
         expected_metadata = {"Name": "name", "version": 1.2}
