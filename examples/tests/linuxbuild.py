@@ -32,7 +32,16 @@ class LinuxBuildTest(Test):
         self.linux_build.uncompress()
         self.linux_build.configure()
 
-    def test(self):
-        self.linux_build.build(True if self.do_kernel_install is not None else False)
-        if self.do_kernel_install is not None:
-            self.linux_build.install()
+    @unittest.skipUnless(self.do_kernel_install is not None)
+    def test_condition1(self):
+        self.linux_build.build(True)
+        self.linux_build.install()
+
+    @unittest.skipUnless(self.do_kernel_install is None)
+    def test_condition1(self):
+        self.linux_build.build(False)
+
+    # def test(self):
+    #     self.linux_build.build(True if self.do_kernel_install is not None else False)
+    #     if self.do_kernel_install is not None:
+    #         self.linux_build.install()

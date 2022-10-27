@@ -9,9 +9,9 @@ class ErrorTest(Test):
     :avocado: tags=failure_expected
     """
 
-    @staticmethod
-    def test():
+
+    def test(self):
         """
         This should end with ERROR.
         """
-        raise Exception("This is a generic exception")
+        self.assertRaises(Exception, msg="This is a generic exception")

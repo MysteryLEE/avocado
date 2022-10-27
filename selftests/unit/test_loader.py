@@ -209,7 +209,7 @@ class LoaderTest(unittest.TestCase):
         test_class, _ = self.loader.discover(
             avocado_pass_test.path, loader.DiscoverMode.ALL
         )[0]
-        self.assertTrue(test_class == "First", test_class)
+        self.assertEqual(test_class, "First")
         avocado_pass_test.remove()
 
     def test_load_pass_disable(self):

@@ -68,7 +68,7 @@ class GetData(Test):
 
         # Write to stdout with print() to test output check capabilities,
         # a feature that uses the data directories (get_data()) itself
-        print("This is output from test_a")
+        # print("This is output from test_a")
 
     def test_b(self):
         """

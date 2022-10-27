@@ -9,10 +9,10 @@ class Path(unittest.TestCase):
         with unittest.mock.patch(
             "avocado.utils.path.os.path.exists", return_value=False
         ) as mocked_exists:
-            with self.assertRaises(OSError) as cm:
+            with self.assertRaises(OSError, msg="Exception <OSError> should be raised!") as cm:
                 path.check_readable(os.devnull)
             self.assertEqual(
-                f'File "{os.devnull}" does not exist', cm.exception.args[0]
+                f'File "{os.devnull}" does not exist', cm.exception.args[0], msg="Exception message is wrong!"
             )
             mocked_exists.assert_called_with(os.devnull)
 

@@ -73,7 +73,7 @@ class TestDataStructures(unittest.TestCase):
 
         item = DummyClass()
         self.assertNotIn("dummy_method", item.__dict__)
-        self.assertEqual(item.dummy_method, True)
+        self.assertTrue(item.dummy_method)
         self.assertIn("dummy_method", item.__dict__)
 
     def test_callback_register(self):

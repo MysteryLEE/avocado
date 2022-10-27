@@ -378,7 +378,7 @@ class TestAvocadoParams(unittest.TestCase):
         self.assertEqual(self.params1, params)
 
     def test_basic(self):
-        self.assertEqual(self.params1, self.params1)
+        # self.assertEqual(self.params1, self.params1)
         self.assertNotEqual(self.params1, self.params2)
         repr(self.params1)
         str(self.params1)

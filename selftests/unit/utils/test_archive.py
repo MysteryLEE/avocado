@@ -149,7 +149,7 @@ class ArchiveTest(unittest.TestCase):
             os.path.join(BASEDIR, "selftests", ".data", "empty.tar.bz2"),
             self.decompressdir,
         )
-        self.assertEqual(ret, None, (f"Empty archive should return None " f"({ret})"))
+        self.assertIsNone(ret)
 
     def test_is_gzip_file(self):
         gz_path = os.path.join(BASEDIR, "selftests", ".data", "avocado.gz")
@@ -173,9 +173,9 @@ class ArchiveTest(unittest.TestCase):
     def test_uncompress_gzip(self):
         gz_path = os.path.join(BASEDIR, "selftests", ".data", "avocado.gz")
         ret = archive.uncompress(gz_path, self.decompressdir)
-        self.assertEqual(ret, os.path.join(self.decompressdir, "avocado"))
+        self.assertEqual(ret, os.path.join(self.decompressdir, "avocado"), msg="Uncompressed gzip path is wrong!")
         with open(ret, "rb") as decompressed:
-            self.assertEqual(decompressed.read(), b"avocado\n")
+            self.assertEqual(decompressed.read(), b"avocado\n", msg="Uncompressed gzip content in binary is wrong!")
 
     def test_is_lzma_file(self):
         xz_path = os.path.join(BASEDIR, "selftests", ".data", "avocado.xz")
@@ -205,9 +205,9 @@ class ArchiveTest(unittest.TestCase):
     def test_uncompress_lzma(self):
         xz_path = os.path.join(BASEDIR, "selftests", ".data", "avocado.xz")
         ret = archive.uncompress(xz_path, self.decompressdir)
-        self.assertEqual(ret, os.path.join(self.decompressdir, "avocado"))
+        self.assertEqual(ret, os.path.join(self.decompressdir, "avocado"), msg="Uncompressed lzma path is wrong!")
         with open(ret, "rb") as decompressed:
-            self.assertEqual(decompressed.read(), b"avocado\n")
+            self.assertEqual(decompressed.read(), b"avocado\n", msg="Uncompressed lzma content in binary is wrong!")
 
     def tearDown(self):
         try:
